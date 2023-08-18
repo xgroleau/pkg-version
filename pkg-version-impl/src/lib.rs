@@ -11,7 +11,7 @@
 #[allow(unused_extern_crates)] // ignore warning on nightly
 extern crate proc_macro;
 
-use proc_macro::TokenStream;
+use proc_macro::{Literal, TokenStream, TokenTree};
 use proc_macro_hack::proc_macro_hack;
 use std::env;
 
@@ -60,4 +60,20 @@ pub fn pkg_version_patch(input: TokenStream) -> TokenStream {
         .unwrap();
 
     version.to_string().parse().unwrap()
+}
+
+#[proc_macro_hack]
+pub fn pkg_version_pre(input: TokenStream) -> TokenStream {
+    if !input.is_empty() {
+        panic!("unexpected arguments for `pkg_version_patch!` macro (expected no arguments)");
+    }
+
+    let version = env::var("CARGO_PKG_VERSION_PRE").unwrap();
+    let lit = Literal::string(&version);
+
+    // Create the token tree
+    let mut tokens = TokenStream::new();
+    tokens.extend(std::iter::once(TokenTree::Literal(lit)));
+
+    tokens
 }

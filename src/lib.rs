@@ -11,10 +11,12 @@
 //! const MAJOR: u32 = pkg_version_major!();
 //! const MINOR: u32 = pkg_version_minor!();
 //! const PATCH: u32 = pkg_version_patch!();
+//! const PRE: &'static str = pkg_version_pre!();
 //!
 //! fn main() {
 //!     let version = format!("{}.{}.{}", MAJOR, MINOR, PATCH);
 //!     assert_eq!(version, "1.0.0");
+//!     assert_eq!("", PRE);
 //!
 //!     println!("I am version {}", version);
 //! }
@@ -50,6 +52,10 @@ pub use pkg_version_impl::pkg_version_minor;
 #[proc_macro_hack]
 pub use pkg_version_impl::pkg_version_patch;
 
+/// Expands to the patch version number of the Cargo package, as a string literal.
+#[proc_macro_hack]
+pub use pkg_version_impl::pkg_version_pre;
+
 /// Make sure passing any arguments results in an error.
 ///
 /// ```compile_fail
@@ -65,5 +71,10 @@ pub use pkg_version_impl::pkg_version_patch;
 /// ```compile_fail
 /// use pkg_version::*;
 /// pkg_version_patch!(_);
+/// ```
+///
+/// ```compile_fail
+/// use pkg_version::*;
+/// pkg_version_pre!(_);
 /// ```
 const _COMPILE_FAIL: () = ();
